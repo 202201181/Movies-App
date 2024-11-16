@@ -7,8 +7,15 @@ const createMovie = async (req, res) => {
 
     // Check if files exist and handle missing files more gracefully
     if (!req.files || !req.files.image || !req.files.image[0]) {
+<<<<<<< Updated upstream
       return res.status(400).json({ message: 'Image file is required.' });
     }
+=======
+      console.log(req.files, req.files.image, req.files.image[0]);
+      return res.status(400).json({ message: 'Image file is required.' });
+    }
+
+>>>>>>> Stashed changes
     if (!req.files.video || !req.files.video[0]) {
       return res.status(400).json({ message: 'Video file is required.' });
     }
@@ -36,8 +43,13 @@ const createMovie = async (req, res) => {
     });
 
     await movie.save();
+<<<<<<< Updated upstream
 
     res.json({ message: 'Movie uploaded successfully', movie });
+=======
+    console.log("eah");
+    res.status(202).json({ success:true, message: 'Movie uploaded successfully', movie });
+>>>>>>> Stashed changes
   } catch (error) {
     console.error('Error details:', error); // Logs detailed error
     res.status(500).json({ message: 'Server error', error: error.message });

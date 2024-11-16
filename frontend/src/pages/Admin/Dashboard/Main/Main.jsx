@@ -22,25 +22,22 @@ const Main = () => {
 
   return (
     <div>
-      <section className="flex justify-around">
-        <div className="ml-[14rem] mt-10">
+      <section className="ml-[2rem] mt-[3.5rem] flex bg-gray-900 justify-around">
+        <div className="ml-[1rem] mt-10">
           <div className="-translate-x-4 flex">
             <SecondaryCard
               pill="Users"
               content={visitors?.length}
-              info="20.2k more then usual"
               gradient="from-teal-500 to-lime-400"
             />
             <SecondaryCard
               pill="Comments"
               content={sumOfCommentsLength}
-              info="742.8 more then usual"
               gradient="from-[#CCC514] to-[#CDCB8E]"
             />
             <SecondaryCard
               pill="Movies"
               content={allMovies?.length}
-              info="372+ more then usual"
               gradient="from-green-500 to-lime-400"
             />
           </div>
@@ -60,12 +57,13 @@ const Main = () => {
           ))}
         </div>
 
-        <div>
+        {/* <div>
           <RealTimeCard />
-        </div>
+        </div> */}
       </section>
     </div>
   );
 };
 
 export default Main;
+

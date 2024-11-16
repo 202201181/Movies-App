@@ -4,7 +4,7 @@ import Sidebar from "./Sidebar/Sidebar";
 const AdminDashboard = () => {
   return (
     <>
-      <Sidebar />
+      {/* <Sidebar /> */}
       <Main />
     </>
   );

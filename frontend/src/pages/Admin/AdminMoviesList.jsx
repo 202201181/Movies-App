@@ -3,9 +3,9 @@ import { useGetAllMoviesQuery } from "../../redux/api/movies";
 
 const AdminMoviesList = () => {
   const { data: movies } = useGetAllMoviesQuery();
-
+  console.log(movies);
   return (
-    <div className="container mx-[9rem]">
+    <div className="container ml-[2rem] mt-[3.5rem] bg-gray-900 text-white mx-[0rem]">
       <div className="flex flex-col md:flex-row">
         <div className="p-3">
           <div className="ml-[2rem] text-xl font-bold h-12">
@@ -27,7 +27,7 @@ const AdminMoviesList = () => {
                     <img
                       src={movie.image}
                       alt={movie.name}
-                      className="w-full h-48 object-cover"
+                      className="w-[15rem] h-[20rem] object-cover"
                     />
                     <div className="px-6 py-4 border border-gray-400">
                       <div className="font-bold text-xl mb-2">{movie.name}</div>
