@@ -27,6 +27,7 @@ const AllMovies = () => {
 
   const { moviesFilter, filteredMovies } = useSelector((state) => state.movies);
 
+  // console.log('data', data);
   const movieYears = data?.map((movie) => movie.year);
   const uniqueYears = Array.from(new Set(movieYears));
 
@@ -36,6 +37,7 @@ const AllMovies = () => {
     dispatch(setUniqueYears(uniqueYears));
   }, [data, dispatch]);
 
+  console.log("moviesFilter", moviesFilter);
   const handleSearchChange = (e) => {
     dispatch(setMoviesFilter({ searchTerm: e.target.value }));
 
@@ -111,7 +113,7 @@ const AllMovies = () => {
               <section className="sorts-container mt-[2rem] ml-[10rem]  w-[30rem]">
                 <select
                   className="border p-2 rounded-lg text-black"
-                  value={moviesFilter.selectedGenre}
+                  value={moviesFilter?.selectedGenre}
                   onChange={(e) => handleGenreClick(e.target.value)}
                 >
                   <option value="">Genres</option>
@@ -124,7 +126,7 @@ const AllMovies = () => {
 
                 <select
                   className="border p-2 rounded-lg ml-4 text-black"
-                  value={moviesFilter.selectedYear}
+                  value={moviesFilter?.selectedYear}
                   onChange={(e) => handleYearChange(e.target.value)}
                 >
                   <option value="">Year</option>
@@ -137,7 +139,7 @@ const AllMovies = () => {
 
                 <select
                   className="border p-2 rounded-lg ml-4 text-black"
-                  value={moviesFilter.selectedSort}
+                  value={moviesFilter?.selectedSort[0]}
                   onChange={(e) => handleSortChange(e.target.value)}
                 >
                   <option value="">Sort By</option>

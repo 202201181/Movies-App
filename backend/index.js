@@ -1,10 +1,7 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
-<<<<<<< Updated upstream
-=======
 import cors from "cors"; // Import CORS
->>>>>>> Stashed changes
 
 // Files
 import connectDB from "./config/db.js";

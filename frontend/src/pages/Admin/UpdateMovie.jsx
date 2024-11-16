@@ -381,6 +381,7 @@ const UpdateMovie = () => {
         id,
         updatedMovie: {
           ...movieData,
+          detail: movieData.detail.trim(),
           cast: castArray,
           image: uploadedImagePath,
           video: uploadedVideoPath,
@@ -533,7 +534,12 @@ const UpdateMovie = () => {
               <textarea
                 name="detail"
                 value={movieData.detail}
-                onChange={handleChange}
+                onChange={(e) =>
+                  setMovieData((prev) => ({
+                    ...prev,
+                    detail: e.target.value,
+                  }))
+                }
                 rows="4"
                 className="w-full px-4 py-3 bg-gray-800 rounded-lg border border-gray-700 text-white focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-colors resize-none"
                 placeholder="Enter movie description"

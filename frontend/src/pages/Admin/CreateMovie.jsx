@@ -796,7 +796,15 @@ const CreateMovie = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [hoveredRating, setHoveredRating] = useState(0);
-  const [movieData, setMovieData] = useState({});
+  const [movieData, setMovieData] = useState({
+    name: "", // Movie name
+    year: "", // Release year
+    detail: "", // Movie details
+    cast: [], // Array of cast members
+    rating: 0, // Initial rating (out of 10)
+    genre: "comedy", // Genre ID
+    tier: "silver", // Default tier value
+  });
   const [loading, setLoading] = useState(false);
   const [
     createMovie,

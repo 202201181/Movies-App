@@ -7,17 +7,12 @@ const createMovie = async (req, res) => {
 
     // Check if files exist and handle missing files more gracefully
     if (!req.files || !req.files.image || !req.files.image[0]) {
-<<<<<<< Updated upstream
-      return res.status(400).json({ message: 'Image file is required.' });
-    }
-=======
       console.log(req.files, req.files.image, req.files.image[0]);
-      return res.status(400).json({ message: 'Image file is required.' });
+      return res.status(400).json({ message: "Image file is required." });
     }
 
->>>>>>> Stashed changes
     if (!req.files.video || !req.files.video[0]) {
-      return res.status(400).json({ message: 'Video file is required.' });
+      return res.status(400).json({ message: "Video file is required." });
     }
 
     const imageFile = req.files.image[0];
@@ -25,8 +20,8 @@ const createMovie = async (req, res) => {
 
     // Upload both files to Cloudinary
     const [imageUpload, videoUpload] = await Promise.all([
-      uploadToCloudinary(imageFile.buffer, 'image'),
-      uploadToCloudinary(videoFile.buffer, 'video')
+      uploadToCloudinary(imageFile.buffer, "image"),
+      uploadToCloudinary(videoFile.buffer, "video"),
     ]);
 
     // Create a new movie document with the uploaded URLs and additional details
@@ -38,21 +33,18 @@ const createMovie = async (req, res) => {
       year,
       genre,
       detail,
-      cast: cast ? cast.split(',').map(c => c.trim()) : [], // Trimming each cast member
-      tier: tier.split(',').map(t => t.trim()), // Trimming each tier value
+      cast: cast ? cast.split(",").map((c) => c.trim()) : [], // Trimming each cast member
+      tier: tier.split(",").map((t) => t.trim()), // Trimming each tier value
     });
 
     await movie.save();
-<<<<<<< Updated upstream
-
-    res.json({ message: 'Movie uploaded successfully', movie });
-=======
     console.log("eah");
-    res.status(202).json({ success:true, message: 'Movie uploaded successfully', movie });
->>>>>>> Stashed changes
+    res
+      .status(202)
+      .json({ success: true, message: "Movie uploaded successfully", movie });
   } catch (error) {
-    console.error('Error details:', error); // Logs detailed error
-    res.status(500).json({ message: 'Server error', error: error.message });
+    console.error("Error details:", error); // Logs detailed error
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -68,19 +60,23 @@ const getAllMovies = async (req, res) => {
     // Find movies that match the user's tier or a higher tier
     // This assumes a priority where 'platinum' > 'gold' > 'silver'
     let movies;
-    if (userTier === 'platinum') {
-      movies = await Movie.find({ tier: { $in: ['platinum', 'gold', 'silver'] } });
-    } else if (userTier === 'gold') {
-      movies = await Movie.find({ tier: { $in: ['gold', 'silver'] } });
-    } else if (userTier === 'silver') {
-      movies = await Movie.find({ tier: 'silver' });
+    if (userTier === "platinum") {
+      movies = await Movie.find({
+        tier: { $in: ["platinum", "gold", "silver"] },
+      });
+    } else if (userTier === "gold") {
+      movies = await Movie.find({ tier: { $in: ["gold", "silver"] } });
+    } else if (userTier === "silver") {
+      movies = await Movie.find({ tier: "silver" });
     } else {
       return res.status(400).json({ error: "Invalid tier in cookie" });
     }
-
-    res.json(movies);
+    // console.log("movies", movies);
+    const data = movies;
+    res.status(202).send(data);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    // console.log("error", error);
+    res.status(500).send(error.message);
   }
 };
 
@@ -106,7 +102,7 @@ const updateMovie = async (req, res) => {
     // Find the movie by ID
     const movie = await Movie.findById(id);
     if (!movie) {
-      return res.status(404).json({ message: 'Movie not found' });
+      return res.status(404).json({ message: "Movie not found" });
     }
 
     // Prepare update object
@@ -116,31 +112,33 @@ const updateMovie = async (req, res) => {
       rating: rating || movie.rating,
       genre: genre || movie.genre,
       detail: detail || movie.detail,
-      cast: cast ? cast.split(',').map(c => c.trim()) : movie.cast,
-      tier: tier ? tier.split(',').map(t => t.trim()) : movie.tier,
+      cast: cast ? cast.split(",").map((c) => c.trim()) : movie.cast,
+      tier: tier ? tier.split(",").map((t) => t.trim()) : movie.tier,
     };
 
     // Check if new image file is uploaded
     if (req.files && req.files.image && req.files.image[0]) {
       const imageFile = req.files.image[0];
-      const imageUpload = await uploadToCloudinary(imageFile.buffer, 'image');
+      const imageUpload = await uploadToCloudinary(imageFile.buffer, "image");
       updateFields.image = imageUpload.secure_url;
     }
 
     // Check if new video file is uploaded
     if (req.files && req.files.video && req.files.video[0]) {
       const videoFile = req.files.video[0];
-      const videoUpload = await uploadToCloudinary(videoFile.buffer, 'video');
+      const videoUpload = await uploadToCloudinary(videoFile.buffer, "video");
       updateFields.video = videoUpload.secure_url;
     }
 
     // Update the movie document with new values
-    const updatedMovie = await Movie.findByIdAndUpdate(id, updateFields, { new: true });
+    const updatedMovie = await Movie.findByIdAndUpdate(id, updateFields, {
+      new: true,
+    });
 
-    res.json({ message: 'Movie updated successfully', updatedMovie });
+    res.json({ message: "Movie updated successfully", updatedMovie });
   } catch (error) {
-    console.error('Error details:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    console.error("Error details:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -234,27 +232,26 @@ const getNewMovies = async (req, res) => {
 
     // Determine which tiers the user can access based on their own tier
     let accessibleTiers;
-    if (userTier === 'platinum') {
-      accessibleTiers = ['platinum', 'gold', 'silver'];
-    } else if (userTier === 'gold') {
-      accessibleTiers = ['gold', 'silver'];
-    } else if (userTier === 'silver') {
-      accessibleTiers = ['silver'];
+    if (userTier === "platinum") {
+      accessibleTiers = ["platinum", "gold", "silver"];
+    } else if (userTier === "gold") {
+      accessibleTiers = ["gold", "silver"];
+    } else if (userTier === "silver") {
+      accessibleTiers = ["silver"];
     } else {
       return res.status(400).json({ error: "Invalid tier" });
     }
 
     // Find the latest 10 movies that the user can access based on their tier
     const newMovies = await Movie.find({ tier: { $in: accessibleTiers } })
-                                 .sort({ createdAt: -1 })
-                                 .limit(10);
+      .sort({ createdAt: -1 })
+      .limit(10);
 
     res.json(newMovies);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 const getTopMovies = async (req, res) => {
   try {
@@ -267,27 +264,26 @@ const getTopMovies = async (req, res) => {
 
     // Determine which tiers the user can access based on their own tier
     let accessibleTiers;
-    if (userTier === 'platinum') {
-      accessibleTiers = ['platinum', 'gold', 'silver'];
-    } else if (userTier === 'gold') {
-      accessibleTiers = ['gold', 'silver'];
-    } else if (userTier === 'silver') {
-      accessibleTiers = ['silver'];
+    if (userTier === "platinum") {
+      accessibleTiers = ["platinum", "gold", "silver"];
+    } else if (userTier === "gold") {
+      accessibleTiers = ["gold", "silver"];
+    } else if (userTier === "silver") {
+      accessibleTiers = ["silver"];
     } else {
       return res.status(400).json({ error: "Invalid tier" });
     }
 
     // Find the top 10 rated movies that the user can access based on their tier
     const topRatedMovies = await Movie.find({ tier: { $in: accessibleTiers } })
-                                      .sort({ rating: -1 })
-                                      .limit(10);
+      .sort({ rating: -1 })
+      .limit(10);
 
     res.json(topRatedMovies);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 const getRandomMovies = async (req, res) => {
   try {
@@ -300,20 +296,20 @@ const getRandomMovies = async (req, res) => {
 
     // Determine which tiers the user can access based on their own tier
     let accessibleTiers;
-    if (userTier === 'platinum') {
-      accessibleTiers = ['platinum', 'gold', 'silver'];
-    } else if (userTier === 'gold') {
-      accessibleTiers = ['gold', 'silver'];
-    } else if (userTier === 'silver') {
-      accessibleTiers = ['silver'];
+    if (userTier === "platinum") {
+      accessibleTiers = ["platinum", "gold", "silver"];
+    } else if (userTier === "gold") {
+      accessibleTiers = ["gold", "silver"];
+    } else if (userTier === "silver") {
+      accessibleTiers = ["silver"];
     } else {
       return res.status(400).json({ error: "Invalid tier" });
     }
 
     // Find 10 random movies from the accessible tiers
     const randomMovies = await Movie.aggregate([
-      { $match: { tier: { $in: accessibleTiers } } },  // Filter movies by user's accessible tiers
-      { $sample: { size: 10 } }  // Select 10 random movies
+      { $match: { tier: { $in: accessibleTiers } } }, // Filter movies by user's accessible tiers
+      { $sample: { size: 10 } }, // Select 10 random movies
     ]);
 
     res.json(randomMovies);
@@ -322,7 +318,6 @@ const getRandomMovies = async (req, res) => {
   }
 };
 
- 
 export {
   createMovie,
   getAllMovies,

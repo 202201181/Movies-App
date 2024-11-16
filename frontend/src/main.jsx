@@ -36,11 +36,7 @@ const router = createBrowserRouter(
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/movies/:id" element={<MovieDetails />} />
-<<<<<<< Updated upstream
       <Route path="/about" element={<About />} />
-=======
-        <Route path="/about" element={<About />} />
->>>>>>> Stashed changes
 
       <Route path="" element={<PrivateRoute />}>
         <Route path="/profile" element={<Profile />} />
