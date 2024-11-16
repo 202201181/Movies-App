@@ -39,7 +39,10 @@ const Footer = () => {
       {/* Logo Section */}
       <Box sx={{ transform: { xs: "scale(0.9)", md: "scale(1)" } }}>
         <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-          <Link href="/" sx={{ display: "block", transition: "transform 0.3s ease" }}>
+          <Link
+            href="/"
+            sx={{ display: "block", transition: "transform 0.3s ease" }}
+          >
             <img
               src={logo}
               alt=""
@@ -83,7 +86,9 @@ const Footer = () => {
         {["Home", "About", "For You", "Profile"].map((item) => (
           <Link
             key={item}
-            href={item.toLowerCase() === "for you" ? "#" : item.toLowerCase()}
+            href={
+              item === "Profile" || item === "About" ? item.toLowerCase() : "/"
+            }
             underline="none"
             color="inherit"
             sx={{

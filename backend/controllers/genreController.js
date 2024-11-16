@@ -23,6 +23,7 @@ const createGenre = asyncHandler(async (req, res) => {
   }
 });
 
+
 const updateGenre = asyncHandler(async (req, res) => {
   try {
     const { name } = req.body;
@@ -44,6 +45,7 @@ const updateGenre = asyncHandler(async (req, res) => {
   }
 });
 
+
 const removeGenre = asyncHandler(async (req, res) => {
   try {
     const { id } = req.params;
@@ -60,6 +62,7 @@ const removeGenre = asyncHandler(async (req, res) => {
   }
 });
 
+
 const listGenres = asyncHandler(async (req, res) => {
   try {
     const all = await Genre.find({});
@@ -69,6 +72,7 @@ const listGenres = asyncHandler(async (req, res) => {
     return res.status(400).json(error.message);
   }
 });
+
 
 const readGenre = asyncHandler(async (req, res) => {
   try {

@@ -58,7 +58,7 @@ const MoviesContainerPage = () => {
                   onClick={() => handleGenreClick(g._id)}
                   className={`
                     px-4 py-2 rounded-lg text-sm font-medium
-                    transition-all duration-300 ease-in-out
+                     ease-in-out
                     border border-gray-700
                     ${
                       selectedGenre === g._id

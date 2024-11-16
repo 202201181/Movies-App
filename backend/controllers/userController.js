@@ -4,19 +4,19 @@ import asyncHandler from "../middlewares/asyncHandler.js";
 import createToken from "../utils/createToken.js";
 
 const createUser = asyncHandler(async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, tier } = req.body;
 
-  if (!username || !email || !password) {
+  if (!username || !email || !password || !tier) {
     throw new Error("Please fill all the fields");
   }
 
   const userExists = await User.findOne({ email });
-  if (userExists) res.status(400).send("User already exists");
+  if (userExists) return res.status(400).send("User already exists");
 
   // Hash the user password
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
-  const newUser = new User({ username, email, password: hashedPassword });
+  const newUser = new User({ username, email, password: hashedPassword, tier: tier });
 
   try {
     await newUser.save();
@@ -27,12 +27,14 @@ const createUser = asyncHandler(async (req, res) => {
       username: newUser.username,
       email: newUser.email,
       isAdmin: newUser.isAdmin,
+      tier: newUser.tier,
     });
   } catch (error) {
     res.status(400);
     throw new Error("Invalid user data");
   }
 });
+
 
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -53,14 +55,16 @@ const loginUser = asyncHandler(async (req, res) => {
         username: existingUser.username,
         email: existingUser.email,
         isAdmin: existingUser.isAdmin,
+        tier: existingUser.tier,
       });
     } else {
-      res.status(401).json({ message: "Invalid Password" });
+      return res.status(401).json({ message: "Invalid Password" });
     }
   } else {
-    res.status(401).json({ message: "User not found" });
+    return res.status(401).json({ message: "User not found" });
   }
 });
+
 
 const logoutCurrentUser = asyncHandler(async (req, res) => {
   res.cookie("jwt", "", {
@@ -71,10 +75,12 @@ const logoutCurrentUser = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Logged out successfully" });
 });
 
+
 const getAllUsers = asyncHandler(async (req, res) => {
   const users = await User.find({});
   res.json(users);
 });
+
 
 const getCurrentUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
@@ -84,12 +90,14 @@ const getCurrentUserProfile = asyncHandler(async (req, res) => {
       _id: user._id,
       username: user.username,
       email: user.email,
+      tier: newUser.tier,
     });
   } else {
     res.status(404);
     throw new Error("User not found.");
   }
 });
+
 
 const updateCurrentUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);

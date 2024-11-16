@@ -36,6 +36,7 @@ const router = createBrowserRouter(
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/movies/:id" element={<MovieDetails />} />
+      <Route path="/about" element={<About />} />
 
       <Route path="" element={<PrivateRoute />}>
         <Route path="/profile" element={<Profile />} />
@@ -49,7 +50,6 @@ const router = createBrowserRouter(
         <Route path="/admin/movies/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/movies/comments" element={<AllComments />} />
         <Route path="/admin/movies/top" element={<TopMoviesPage />} />
-        <Route path="/about" element={<About />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />

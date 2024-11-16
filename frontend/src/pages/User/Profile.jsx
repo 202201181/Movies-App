@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import Loader from "../../component/Loader";
 import { useProfileMutation } from "../../redux/api/users";
 import { setCredentials } from "../../redux/features/auth/authSlice";
@@ -76,6 +76,19 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+      {/* Toast Container */}
+      <ToastContainer
+        position="top-right" // Position toast above the header
+        autoClose={3000}
+        hideProgressBar={false}
+        zindex={12}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <div className="bg-gray-800 text-white rounded-lg shadow-lg p-6 w-full max-w-md">
         <h2 className="text-3xl font-semibold mb-6 text-center">
           Update Profile
@@ -114,7 +127,9 @@ const Profile = () => {
             )}
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Change Password</label>
+            <label className="block text-sm font-medium mb-2">
+              Change Password
+            </label>
             <input
               type="password"
               placeholder="Enter password"

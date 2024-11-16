@@ -113,8 +113,7 @@
 
 // export default MovieDetails;
 
-
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -129,10 +128,15 @@ const MovieDetails = () => {
   const { id: movieId } = useParams();
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [videoUrl, setVideoUrl] = useState("");
+  const [isDownloadDisabled, setIsDownloadDisabled] = useState(false);
   const { data: movie, refetch } = useGetSpecificMovieQuery(movieId);
   const { userInfo } = useSelector((state) => state.auth);
   const [createReview, { isLoading: loadingMovieReview }] =
     useAddMovieReviewMutation();
+
+  const videoRef = useRef(null); // Reference for the video element
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -146,6 +150,30 @@ const MovieDetails = () => {
       toast.success("Review created successfully");
     } catch (error) {
       toast.error(error.data || error.message);
+    }
+  };
+
+  // Function to handle the "Watch Now" button click
+  const handleWatchNow = () => {
+    setVideoUrl(movie?.video); // Set the video URL from the movie object
+    setIsPlaying(true); // Set playing to true to show video
+    setIsDownloadDisabled(true); // Disable the download button
+
+    // Make the video element full screen
+    if (videoRef.current) {
+      // Request fullscreen on the video element itself
+      if (videoRef.current.requestFullscreen) {
+        videoRef.current.requestFullscreen();
+      } else if (videoRef.current.mozRequestFullScreen) {
+        // Firefox
+        videoRef.current.mozRequestFullScreen();
+      } else if (videoRef.current.webkitRequestFullscreen) {
+        // Chrome, Safari, and Opera
+        videoRef.current.webkitRequestFullscreen();
+      } else if (videoRef.current.msRequestFullscreen) {
+        // IE/Edge
+        videoRef.current.msRequestFullscreen();
+      }
     }
   };
 
@@ -216,7 +244,10 @@ const MovieDetails = () => {
             </p>
 
             {/* Watch Button */}
-            <button className="group flex items-center px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-red-500/25">
+            <button
+              onClick={handleWatchNow}
+              className="group flex items-center px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-red-500/25"
+            >
               <PlayCircle className="w-6 h-6 mr-3 transform group-hover:scale-110 transition-transform" />
               <span className="font-semibold text-lg">Watch Now</span>
             </button>
@@ -252,6 +283,21 @@ const MovieDetails = () => {
           />
         </div>
       </div>
+
+      {/* Fullscreen Video */}
+      {isPlaying && (
+        <div className="absolute inset-0 bg-black flex items-center justify-center z-20">
+          <video
+            ref={videoRef}
+            className="w-full h-full object-cover"
+            controls
+            autoPlay
+            src={videoUrl}
+          ></video>
+        </div>
+      )}
+
+     
     </div>
   );
 };

@@ -9,6 +9,7 @@ import rishi from "../../assets/Group-member/Rishi.jpg";
 import kishan from "../../assets/Group-member/Kishan.jpg";
 import sahil from "../../assets/Group-member/Sahil.jpeg";
 import sarjil from "../../assets/Group-member/Sarjil.jpeg";
+import girish from "../../assets/Group-member/Girish.jpeg";
 
 function About() {
   return (
@@ -70,6 +71,9 @@ function About() {
             <TeamMember image={sarjil} name="Sarjil Chauhan" />
             <TeamMember image={sahil} name="Sahil Pandavadara" />
           </div>
+            <div className="flex justify-center mt-10">
+              <TeamMember image={girish} name="Girish Reddy" />
+            </div>
         </div>
 
         {/* Tech Stack */}

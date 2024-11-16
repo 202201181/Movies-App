@@ -20,9 +20,23 @@ const userSchema = mongoose.Schema(
 
     isAdmin: {
       type: Boolean,
-      required: true,
       default: false,
     },
+
+    tier: {
+      type: String,
+      enum: ['gold', 'silver', 'platinum'],
+      default: 'silver',  
+      required: true,
+    },
+    verified: {
+      type: Boolean,
+      default: false
+       },
+      resetPasswordToken: String,
+      resetPasswordExpiresAt: Date,
+      verificationToken: String,
+      verificationTokenExpiresAt: Date,
   },
   { timestamps: true }
 );

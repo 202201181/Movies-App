@@ -7,7 +7,7 @@
   background-color: rgb(17, 17, 43);
   padding: 10px 20px;
   color: #ffffff;
-  z-index: 1000000;
+  z-index: 10;
   /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
   box-shadow: 0 4px 8px rgba(59, 59, 171,0.4);
   position: fixed; /* Ensure the header is positioned correctly */
@@ -43,8 +43,8 @@
 }
 
 .nav-link:hover {
-  color: #1a1a1a; /* Text color on hover */
-  background-color: #e50914; /* Background color on hover */
+  color: #333333; /* Dark gray text color on hover */
+  background-color: #e0e0e0; /* Soft gray background color on hover */
 }
 
 .sign-button {

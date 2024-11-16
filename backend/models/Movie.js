@@ -1,10 +1,8 @@
 import mongoose from "mongoose";
-const { ObjectId } = mongoose.Schema;
 
 const reviewSchema = mongoose.Schema(
   {
     name: { type: String, required: true },
-    rating: { type: Number, required: true },
     comment: { type: String, required: true },
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -15,20 +13,27 @@ const reviewSchema = mongoose.Schema(
   { timestamps: true }
 );
 
-  const movieSchema = new mongoose.Schema(
-    {
-      name: { type: String, required: true },
-      image: { type: String },
-      year: { type: Number, required: true },
-      genre: { type: ObjectId, ref: "Genre", required: true },
-      detail: { type: String, required: true },
-      cast: [{ type: String }],
-      reviews: [reviewSchema],
-      numReviews: { type: Number, required: true, default: 0 },
-      createdAt: { type: Date, default: Date.now },
+const movieSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    image: { type: String },
+    video: { type: String },
+    year: { type: Number, required: true },
+    rating: {type: Number, required: true},
+    genre: { type: mongoose.Schema.Types.ObjectId, ref: "Genre", required: true },
+    detail: { type: String, required: true },
+    cast: [{ type: String }],
+    reviews: [reviewSchema],
+    numReviews: { type: Number, required: true, default: 0 },
+    createdAt: { type: Date, default: Date.now },
+    tier: {
+      type: [String],
+      enum: ['gold', 'silver', 'platinum'],
+      required: true,
     },
-    { timestamps: true }
-  );
+  },
+  { timestamps: true }
+);
 
 const Movie = mongoose.model("Movie", movieSchema);
 export default Movie;
