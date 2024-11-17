@@ -1,128 +1,21 @@
-// import { useState } from "react";
-// import { useParams, Link } from "react-router-dom";
-// import { useSelector } from "react-redux";
-// import { toast } from "react-toastify";
-// import {
-//   useGetSpecificMovieQuery,
-//   useAddMovieReviewMutation,
-// } from "../../redux/api/movies";
-// import MovieTabs from "./MovieTabs";
-// import { PlayCircle } from "lucide-react";
-
-// const MovieDetails = () => {
-//   const { id: movieId } = useParams();
-//   const [rating, setRating] = useState(0);
-//   const [comment, setComment] = useState("");
-//   const { data: movie, refetch } = useGetSpecificMovieQuery(movieId);
-//   const { userInfo } = useSelector((state) => state.auth);
-//   const [createReview, { isLoading: loadingMovieReview }] =
-//     useAddMovieReviewMutation();
-
-//   const submitHandler = async (e) => {
-//     e.preventDefault();
-
-//     try {
-//       await createReview({
-//         id: movieId,
-//         rating,
-//         comment,
-//       }).unwrap();
-
-//       refetch();
-
-//       toast.success("Review created successfully");
-//     } catch (error) {
-//       toast.error(error.data || error.message);
-//     }
-//   };
-
-//   return (
-//     <div className="bg-gray-900 text-white min-h-screen">
-//       <div className="max-w-screen-xl mx-auto p-6">
-//         {/* Go Back Link */}
-//         <Link
-//           to="/"
-//           className="text-white font-semibold hover:underline text-lg md:text-2xl"
-//         >
-//           ← Go Back
-//         </Link>
-
-//         {/* Main Content */}
-//         <div className="mt-8 md:mt-12 lg:flex lg:space-x-8">
-//           {/* Movie Image */}
-//           <div className="flex justify-center lg:flex-none lg:w-1/2">
-//             <img
-//               src={movie?.image}
-//               alt={movie?.name}
-//               className="w-full md:w-3/4 lg:w-full rounded-lg shadow-lg"
-//             />
-//           </div>
-
-//           {/* Movie Info */}
-//           <div className="mt-8 lg:mt-0 lg:w-1/2">
-//             {/* Movie Title and Play Button */}
-//             <div className="flex items-center space-x-6">
-//               <h2 className="text-3xl md:text-5xl font-bold">{movie?.name}</h2>
-//             </div>
-
-//             {/* Movie Details */}
-//             <p className="mt-4 text-gray-400 max-w-lg">{movie?.detail}</p>
-
-//             <button className="flex items-center px-6 py-3 bg-red-600 rounded-lg hover:bg-red-700 transition transform hover:scale-105 mt-5">
-//               <PlayCircle className="w-8 h-8 mr-2" />
-//               <span className="font-semibold">Watch Now</span>
-//             </button>
-
-//             {/* Release Date & Cast */}
-//             <div className="mt-8 space-y-4">
-//               <p className="text-xl font-semibold">
-//                 Releasing Date:{" "}
-//                 <span className="text-gray-400">{movie?.year}</span>
-//               </p>
-//               <div>
-//                 <h3 className="text-xl font-semibold">Cast:</h3>
-//                 <ul className="text-gray-400">
-//                   {movie?.cast.map((c) => (
-//                     <li key={c._id} className="mt-2 text-lg">
-//                       {c}
-//                     </li>
-//                   ))}
-//                 </ul>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-
-//         {/* Tabs for Reviews */}
-//         <div className="mt-12 md:mt-16">
-//           <MovieTabs
-//             loadingMovieReview={loadingMovieReview}
-//             userInfo={userInfo}
-//             submitHandler={submitHandler}
-//             rating={rating}
-//             setRating={setRating}
-//             comment={comment}
-//             setComment={setComment}
-//             movie={movie}
-//           />
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default MovieDetails;
-
 import { useState, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { useFetchGenresQuery } from "../../redux/api/genre";
 import {
   useGetSpecificMovieQuery,
   useAddMovieReviewMutation,
 } from "../../redux/api/movies";
 import MovieTabs from "./MovieTabs";
-import { PlayCircle, ArrowLeft, Star, Calendar, Users } from "lucide-react";
+import {
+  PlayCircle,
+  ArrowLeft,
+  Star,
+  Calendar,
+  Users,
+  FilmIcon,
+} from "lucide-react";
 
 const MovieDetails = () => {
   const { id: movieId } = useParams();
@@ -130,11 +23,22 @@ const MovieDetails = () => {
   const [comment, setComment] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
   const [videoUrl, setVideoUrl] = useState("");
+  const { data: genres } = useFetchGenresQuery();
   const [isDownloadDisabled, setIsDownloadDisabled] = useState(false);
   const { data: movie, refetch } = useGetSpecificMovieQuery(movieId);
   const { userInfo } = useSelector((state) => state.auth);
   const [createReview, { isLoading: loadingMovieReview }] =
     useAddMovieReviewMutation();
+
+  function findGenreById(id) {
+    console.log(genres);
+    const genre = genres?.find((genre) => genre._id === id); // Adjusted to look for `id` key
+    if (genre) {
+      return genre; // Return the genre object if found
+    } else {
+      return "Unknown Genre"; // Return a message if the genre is not found
+    }
+  }
 
   const videoRef = useRef(null); // Reference for the video element
 
@@ -153,30 +57,39 @@ const MovieDetails = () => {
     }
   };
 
-  // Function to handle the "Watch Now" button click
   const handleWatchNow = () => {
     setVideoUrl(movie?.video); // Set the video URL from the movie object
-    setIsPlaying(true); // Set playing to true to show video
-    setIsDownloadDisabled(true); // Disable the download button
+    setIsPlaying(true); // Show the video player
 
     // Make the video element full screen
     if (videoRef.current) {
-      // Request fullscreen on the video element itself
       if (videoRef.current.requestFullscreen) {
         videoRef.current.requestFullscreen();
       } else if (videoRef.current.mozRequestFullScreen) {
-        // Firefox
         videoRef.current.mozRequestFullScreen();
       } else if (videoRef.current.webkitRequestFullscreen) {
-        // Chrome, Safari, and Opera
         videoRef.current.webkitRequestFullscreen();
       } else if (videoRef.current.msRequestFullscreen) {
-        // IE/Edge
         videoRef.current.msRequestFullscreen();
       }
     }
   };
 
+  const handleClosePlayer = () => {
+    setIsPlaying(false); // Hide the video player
+    setVideoUrl(null); // Clear the video URL
+
+    // Exit fullscreen mode if enabled
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else if (document.mozFullScreenElement) {
+      document.mozCancelFullScreen();
+    } else if (document.webkitFullscreenElement) {
+      document.webkitExitFullscreen();
+    } else if (document.msFullscreenElement) {
+      document.msExitFullscreen();
+    }
+  };
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
       {/* Hero Section with Backdrop */}
@@ -226,7 +139,7 @@ const MovieDetails = () => {
             <div className="flex flex-wrap gap-4 mb-6">
               <div className="flex items-center space-x-2 text-yellow-500">
                 <Star className="w-5 h-5 fill-current" />
-                <span className="font-medium">4.5/5</span>
+                <span className="font-medium">{movie?.rating}/10</span>
               </div>
               <div className="flex items-center space-x-2 text-blue-400">
                 <Calendar className="w-5 h-5" />
@@ -235,6 +148,10 @@ const MovieDetails = () => {
               <div className="flex items-center space-x-2 text-purple-400">
                 <Users className="w-5 h-5" />
                 <span>{movie?.cast?.length} Cast Members</span>
+              </div>
+              <div className="flex items-center space-x-2 text-green-400">
+                <FilmIcon className="w-5 h-5" />
+                <span>{findGenreById(movie?.genre).name}</span>
               </div>
             </div>
 
@@ -251,6 +168,26 @@ const MovieDetails = () => {
               <PlayCircle className="w-6 h-6 mr-3 transform group-hover:scale-110 transition-transform" />
               <span className="font-semibold text-lg">Watch Now</span>
             </button>
+
+            {/* Video Player */}
+            {isPlaying && (
+              <div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex justify-center items-center">
+                <button
+                  onClick={handleClosePlayer}
+                  className="absolute top-5 right-5 text-white bg-red-600 hover:bg-red-700 p-3 rounded-full shadow-lg hover:shadow-2xl focus:outline-none transition-all duration-300 ease-in-out transform hover:scale-110"
+                >
+                  ✕
+                </button>
+                <video
+                  ref={videoRef}
+                  src={videoUrl}
+                  className="w-full h-full max-w-4xl max-h-[80vh] rounded-lg"
+                  controls
+                  controlsList="nodownload" // Disable download option
+                  autoPlay
+                />
+              </div>
+            )}
 
             {/* Cast Section */}
             <div className="mt-12">
@@ -283,21 +220,6 @@ const MovieDetails = () => {
           />
         </div>
       </div>
-
-      {/* Fullscreen Video */}
-      {isPlaying && (
-        <div className="absolute inset-0 bg-black flex items-center justify-center z-20">
-          <video
-            ref={videoRef}
-            className="w-full h-full object-cover"
-            controls
-            autoPlay
-            src={videoUrl}
-          ></video>
-        </div>
-      )}
-
-     
     </div>
   );
 };

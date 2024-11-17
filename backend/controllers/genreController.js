@@ -64,7 +64,6 @@ const removeGenre = asyncHandler(async (req, res) => {
 
 
 const listGenres = asyncHandler(async (req, res) => {
-  console.log("listGenres");
   try {
     const all = await Genre.find({});
     res.json(all);

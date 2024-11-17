@@ -10,19 +10,19 @@ import img5 from "../../assets/img5.jpg";
 
 // Array of banner images with associated text and IDs for linking
 const bannerImages = [
-  { image: img1, text: "The Wild Robot", id: "6734e849333089256fc61f6f" },
+  { image: img1, text: "The Wild Robot", id: "6739c12831d269c52a1fca2c" },
   {
     image: img2,
     text: "Venom: The Last Dance",
-    id: "6734eaa03e0de084f30eb063",
+    id: "6739c36d31d269c52a1fca71",
   },
-  { image: img3, text: "Terrifier3", id: "6734ed1d3e0de084f30eb064" },
+  { image: img3, text: "Terrifier3", id: "6739c56531d269c52a1fca94" },
   {
     image: img4,
     text: "Apocalypse Z: The Beginning of the End",
-    id: "6735ea279a66842cd3a9382b",
+    id: "6739c47331d269c52a1fca86",
   },
-  { image: img5, text: "Deadpool & Wolverine", id: "6735cf6cf47052b2e784a17f" },
+  { image: img5, text: "Deadpool & Wolverine", id: "6739c71d31d269c52a1fcab0" },
 ];
 
 const Banner = () => {

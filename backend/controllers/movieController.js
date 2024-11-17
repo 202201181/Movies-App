@@ -135,10 +135,16 @@ const updateMovie = async (req, res) => {
       new: true,
     });
 
-    res.json({ message: "Movie updated successfully", updatedMovie });
+    res.json({
+      success: true,
+      message: "Movie updated successfully",
+      updatedMovie,
+    });
   } catch (error) {
     console.error("Error details:", error);
-    res.status(500).json({ message: "Server error", error: error.message });
+    res
+      .status(500)
+      .json({ success: false, message: "Server error", error: error.message });
   }
 };
 
